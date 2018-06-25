@@ -40,8 +40,14 @@ export const SUCCESS_STATE = i18n.success();
 export const PASSWORDS_MUST_MATCH = i18n.passwordsMustMatch();
 
 const DEFAULT_STATE = {
-  password: '',
-  passwordConfirmation: '',
+  password: {
+    value: '',
+    errors: []
+  },
+  passwordConfirmation: {
+    value: '',
+    errors: []
+  },
   submissionState: {
     message: '',
     isError: false
@@ -56,14 +62,22 @@ export default class AddPasswordForm extends React.Component {
   state = DEFAULT_STATE;
 
   onPasswordChange = (event) => {
+    // TODO: get errors
     this.setState({
-      password: event.target.value
+      password: {
+        value: event.target.value,
+        errors: []
+      }
     });
   };
 
   onPasswordConfirmationChange = (event) => {
+    // TODO: get errors
     this.setState({
-      passwordConfirmation: event.target.value
+      passwordConfirmation: {
+        value: event.target.value,
+        errors: []
+      }
     });
   };
 
@@ -114,7 +128,7 @@ export default class AddPasswordForm extends React.Component {
   };
 
   render() {
-    const {submissionState} = this.state;
+    const {password, passwordConfirmation, submissionState} = this.state;
     let statusTextStyles = styles.statusText;
     statusTextStyles = submissionState.isError ? {...statusTextStyles, ...styles.errorText} : statusTextStyles;
 
@@ -129,13 +143,14 @@ export default class AddPasswordForm extends React.Component {
         </div>
         <PasswordField
           label={i18n.password()}
-          value={this.state.password}
+          error={password.errors[0]}
+          value={password.value}
           onChange={this.onPasswordChange}
         />
         <PasswordField
           label={i18n.passwordConfirmation()}
-          error={this.mismatchedPasswordsError()}
-          value={this.state.passwordConfirmation}
+          error={passwordConfirmation.errors[0]}
+          value={passwordConfirmation.value}
           onChange={this.onPasswordConfirmationChange}
         />
         <div style={styles.buttonContainer}>
